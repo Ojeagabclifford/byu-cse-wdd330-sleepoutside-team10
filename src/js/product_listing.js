@@ -18,14 +18,14 @@ const dataSource = new ProductData(category);
 // console.log(dataSource);
 
 
-// CORRECT: fetch the data from JSON
-const products = await dataSource.getData();
-console.log(products); // -> this logs the actual array of products from tents.json
+// CORRECT: fetch the data from JSON inside an async wrapper
+async function initListing() {
+  const products = await dataSource.getData();
+  console.log(products); // -> this logs the actual array of products from tents.json
 
+  const productList = new ProductList(category, dataSource, element);
+  // Initialize and render products
+  productList.init();
+}
 
-// console.log(dataSource);
-
-const productList = new ProductList(category, dataSource, element);
-
-// // Initialize and render products
- productList.init();
+initListing();
