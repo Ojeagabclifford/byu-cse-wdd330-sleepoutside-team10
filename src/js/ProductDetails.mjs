@@ -10,34 +10,47 @@ export default class ProductDetails {
   }
 
   async init() {
-    // Use the datasource to get the details for the current product
     this.product = await this.dataSource.findProductById(this.productId);
-    //  console.log('Product found:', this.product);
 
-    // Render the product details HTML
-    this.renderProductDetails();
+  if (!this.product) {
+    console.error('Product not found for ID:', this.productId);
+    document.querySelector('.product-detail').innerHTML =
+      '<p>Product not found.</p>';
+    return;
+  }
 
-    // Add listener to the Add to Cart button
-    // Notice the .bind(this) - necessary to maintain correct context
+  this.renderProductDetails();
     document
       .getElementById('addToCart')
       .addEventListener('click', this.addToCart.bind(this));
   }
 
   addToCart() {
-    // Get existing cart or initialize empty array
+  
     let cart = getLocalStorage('so-cart');
-
+  
     // Ensure cart is an array
     if (!cart || !Array.isArray(cart)) {
       cart = [];
     }
+// Check if item already exists in cart
+  const itemInCart = cart.find(item => item.Id === this.product.Id);
 
-    // Add the current product to the cart array
-    cart.push(this.product);
+  // Optional: If you want to increase quantity instead of adding again
+  if (itemInCart) {
+   itemInCart.quantity = (itemInCart.quantity || 1) + 1;
+    console.log(5+5);
+  } //
+  else {
+    cart.push({ ...this.product, quantity: 1 });
+   //cart.push(this.product);}
+   }
 
-    // Save the updated cart back to localStorage
-    setLocalStorage('so-cart', cart);
+  // Add the product to cart
+ 
+
+  // Save cart
+  setLocalStorage('so-cart', cart);
 
     // Optional: Show confirmation
     console.log('Product added to cart!', this.product.Name);

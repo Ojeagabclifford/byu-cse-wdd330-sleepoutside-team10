@@ -1,19 +1,20 @@
-import { renderListWithTemplate,discountPrice } from "./utils.mjs";
+import { renderListWithTemplate,discountPrice, getParam} from "./utils.mjs";
 
 function productCardTemplate(product) {
-
+    
+const category = getParam('category'); 
  const discount = discountPrice(product.FinalPrice,product.SuggestedRetailPrice);
  
 
   return `
     <li class="product-card">
-      <a href="product_pages/?products=${product.Id}">
+      <a href="product_pages/?products=${product.Id}&category=${category}">
         <img src="${product.Image}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.Name}</h3>
         <p class="product-card__price">$${product.FinalPrice}  <span class="product-discount" >${discount}% OFF</span></p>
          
-        
+      
       </a>
     </li>
     `;
@@ -28,7 +29,7 @@ export default class ProductList {
 
   async init() {
     const list = await this.dataSource.getData();
-    console.log(list)
+    // console.log(list)
     this.renderList(list);
   }
 
